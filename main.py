@@ -1,6 +1,10 @@
 from acrcloud.recognizer import ACRCloudRecognizer
+from dotenv import load_dotenv
 import json
 import os
+
+load_dotenv()
+
 config = {
     'host': os.getenv('ACR_HOST'),
     'access_key': os.getenv('ACR_ACCESS_KEY'),
@@ -12,7 +16,7 @@ config = {
 recognizer = ACRCloudRecognizer(config)
 
 # identify music from audio file
-result = recognizer.recognize_by_file("song.mp4", 0)
+result = recognizer.recognize_by_file("portrait.mp3", 0)
 
 # parse JSON result
 result_json = json.loads(result)
