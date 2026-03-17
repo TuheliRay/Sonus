@@ -15,13 +15,29 @@ def _parse_time_to_seconds(value):
         raise ValueError("Time value is required.")
 
     parts = text.split(":")
-    if not all(part.isdigit() for part in parts):
-        raise ValueError("Use seconds or a mm:ss / hh:mm:ss format.")
 
-    seconds = 0
-    for part in parts:
-        seconds = seconds * 60 + int(part)
-    return seconds
+    # Validate input
+    if not all(part.isdigit() for part in parts):
+        raise ValueError("Use seconds or mm:ss / hh:mm:ss format.")
+
+    parts = list(map(int, parts))
+
+    if len(parts) == 1:
+        # "90"
+        return parts[0]
+
+    elif len(parts) == 2:
+        # "mm:ss"
+        minutes, seconds = parts
+        return minutes * 60 + seconds
+
+    elif len(parts) == 3:
+        # "hh:mm:ss"
+        hours, minutes, seconds = parts
+        return hours * 3600 + minutes * 60 + seconds
+
+    else:
+        raise ValueError("Invalid time format")
 
 
 @app.route("/identify", methods=["POST"])
