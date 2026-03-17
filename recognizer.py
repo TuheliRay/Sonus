@@ -14,30 +14,23 @@ config = {
 
 # create recognizer object
 recognizer = ACRCloudRecognizer(config)
+
+
 def recognize_audio(audio_file):
-    result = recognizer.recognize_by_file(audio_file, 0)
-    result_json = json.loads(result)
-    if 
+    try:
+        result = recognizer.recognize_by_file(audio_file, 0)
+        result_json = json.loads(result)
+    except Exception as e:
+        return {"error": f"Error recognizing audio: {e}"}
 
-# identify music from audio file
-# result = recognizer.recognize_by_file("portrait.mp3", 0)
+    music_list = result_json.get("metadata", {}).get("music")
+    if not music_list:
+        return {"error": "Song not recognized"}
 
-# # parse JSON result
-# result_json = json.loads(result)
+    music = music_list[0]
+    artists = music.get("artists", [])
 
-# if result_json.get("status", {}).get("code") == 0:
-#     music = result_json.get("metadata", {}).get("music", [{}])[0]
-
-#     title = music.get("title", "Unknown title")
-#     artists_list = music.get("artists", [])
-#     artists = ", ".join([a.get("name", "Unknown artist") for a in artists_list]) if artists_list else "Unknown artist"
-#     album = music.get("album", {}).get("name", "Unknown album")
-#     genres_list = music.get("genres", [])
-#     genre = genres_list[0].get("name", "Unknown genre") if genres_list else "Unknown genre"
-
-#     print("Song:", title)
-#     print("Artist:", artists)
-#     print("Album:", album)
-#     print("Genre:", genre)
-# else:
-#     print("No song recognized")
+    return {
+        "title": music.get("title", "Unknown title"),
+        "artist": artists[0].get("name", "Unknown artist") if artists else "Unknown artist",
+    }
