@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Music, Clock, Link as LinkIcon, AlertCircle, Zap, Youtube, ExternalLink } from 'lucide-react'
 
 function App() {
   const [formData, setFormData] = useState({
@@ -47,111 +48,200 @@ function App() {
   }
 
   return (
-    <main className="mx-auto grid w-[min(1100px,calc(100%-2rem))] items-start gap-6 py-12 pb-16 md:grid-cols-[1.15fr_0.85fr] md:pt-16">
-      <section className="grid gap-8 rounded-[28px] border border-white/45 bg-card p-8 shadow-glass backdrop-blur-[14px] max-[720px]:rounded-[22px] max-[720px]:p-5">
-        <div>
-          <p className="m-0 mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-accent-dark">
+    <div className="h-[100dvh] bg-[#0b1016] text-[#e2e8f0] font-sans relative flex flex-col items-center overflow-hidden mix-blend-mode-normal">
+      
+      {/* Dark gradient backdrop to simulate the subtle glow */}
+      <div className="absolute top-0 left-0 w-full h-[60%] bg-[linear-gradient(to_bottom,rgba(16,25,35,0.8),transparent)] pointer-events-none" />
+      <div className="absolute top-[20%] left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[#1a2f3f]/40 blur-[100px] rounded-full pointer-events-none" />
+
+      {/* Faint Waveform graphics overlay on background */}
+      <div className="absolute inset-x-0 top-[35%] h-[200px] opacity-[0.03] flex justify-center gap-1.5 pointer-events-none overflow-hidden">
+        {Array.from({ length: 40 }).map((_, i) => (
+           <div key={`wave-${i}`} className="w-2 bg-white rounded-full h-full" style={{ height: `${20 + Math.random() * 80}%`, opacity: Math.random() }} />
+        ))}
+      </div>
+
+      <main className="relative z-10 w-full max-w-[800px] px-6 py-10 flex flex-col items-center h-full gap-8">
+        
+        {/* Header Section */}
+        <div className="flex flex-col items-center text-center shrink-0 w-full pt-4">
+          <div className="flex items-center gap-2 mb-3">
+            <div className="h-6 w-6 rounded-full bg-[#cbd5e1] flex items-center justify-center">
+              <Zap className="h-4 w-4 text-[#0b1016] fill-[#0b1016]" />
+            </div>
+            <span className="text-[1.2rem] font-bold tracking-tight text-[#cbd5e1]">Sonus</span>
+          </div>
+          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#64748b] mb-4">
             YouTube song finder
           </p>
-          <h3 className="m-0 max-w-[12ch] font-heading text-[clamp(2.8rem,8vw,5.5rem)] font-bold leading-none">
+          <h1 className="text-[clamp(1.4rem,3.5vw,2.1rem)] font-bold leading-[1.3] text-[#f1f5f9] max-w-[28ch]">
             Paste a video link, choose the exact moment, and let Sonus identify the music.
-          </h3>
-          <p className="mt-4 text-muted leading-relaxed">
-            Works with standard YouTube videos and Shorts links. Enter the section where the soundtrack is clearest,
-            and Sonus will send that clip to the backend for recognition.
-          </p>
+          </h1>
         </div>
 
-        <form className="grid gap-4" onSubmit={handleSubmit}>
-          <label className="grid gap-2">
-            <span className="text-[0.92rem] font-medium">YouTube or Shorts URL</span>
-            <input
-              name="url"
-              type="url"
-              value={formData.url}
-              onChange={handleChange}
-              placeholder="https://www.youtube.com/watch?v=..."
-              required
-              className="w-full rounded-[18px] border border-line bg-white/70 px-4 py-[1.05rem] text-ink transition-[border-color,transform,box-shadow] duration-150 ease-out focus:outline-none focus:border-accent/75 focus:-translate-y-0.5 focus:shadow-[0_0_0_4px_rgba(201,107,59,0.12)]"
-            />
-          </label>
+        {/* Content Container (Will hold both cards to enforce exact same width) */}
+        <div className="w-full flex flex-col gap-6 items-center">
+          
+          {/* Form Card */}
+          <section className="w-full rounded-[24px] bg-[linear-gradient(135deg,rgba(200,210,220,0.85),rgba(220,230,240,0.7))] backdrop-blur-2xl px-6 py-6 pb-9 shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-white/40 shrink-0 relative">
+            <form className="flex flex-col gap-5 w-full" onSubmit={handleSubmit}>
+              <div className="grid gap-6 sm:grid-cols-[1.8fr_1fr]">
+                <label className="flex flex-col gap-2">
+                  <span className="text-[12px] font-bold text-[#1e293b] ml-1">YouTube or Shorts URL</span>
+                  <div className="relative flex items-center">
+                    <Youtube className="absolute left-4 h-5 w-5 text-[#94a3b8]" />
+                    <input
+                      name="url"
+                      type="url"
+                      value={formData.url}
+                      onChange={handleChange}
+                      placeholder="https://www.youtube.com/watch?v=..."
+                      required
+                      className="w-full rounded-full bg-[#303842] hover:bg-[#39424e] focus:bg-[#2a313a] border-2 border-transparent focus:border-[#4ade80]/50 outline-none pl-12 pr-4 py-[14px] text-sm text-[#f1f5f9] transition-all font-medium placeholder:text-[#64748b] shadow-inner"
+                    />
+                  </div>
+                </label>
 
-          <div className="grid gap-4 sm:grid-cols-2 max-[720px]:grid-cols-1">
-            <label className="grid gap-2">
-              <span className="text-[0.92rem] font-medium">Timestamp</span>
-              <input
-                name="start_time"
-                type="text"
-                value={formData.start_time}
-                onChange={handleChange}
-                placeholder="0:30"
-                required
-                className="w-full rounded-[18px] border border-line bg-white/70 px-4 py-[1.05rem] text-ink transition-[border-color,transform,box-shadow] duration-150 ease-out focus:outline-none focus:border-accent/75 focus:-translate-y-0.5 focus:shadow-[0_0_0_4px_rgba(201,107,59,0.12)]"
-              />
-            </label>
-          </div>
-
-          <button
-            type="submit"
-            disabled={status === 'loading'}
-            className="cursor-pointer rounded-full bg-linear-to-br from-accent to-[#b34c1f] px-6 py-4 font-bold text-[#fff8ef] shadow-[0_14px_34px_rgba(179,76,31,0.28)] transition-[transform,box-shadow,opacity] duration-150 ease-out hover:-translate-y-0.5 disabled:cursor-wait disabled:opacity-70 disabled:hover:translate-y-0"
-          >
-            {status === 'loading' ? 'Identifying...' : 'Identify music'}
-          </button>
-        </form>
-      </section>
-
-      <section
-        className="min-h-[280px] rounded-[28px] border border-white/45 bg-card p-7 shadow-glass backdrop-blur-[14px] md:sticky md:top-8 max-[720px]:rounded-[22px] max-[720px]:p-5"
-        aria-live="polite"
-      >
-        {status === 'success' && result ? (
-          <div className="grid gap-4">
-            <p className="m-0 text-xs uppercase tracking-[0.16em] text-success">Match found</p>
-            <h2 className="m-0 text-[clamp(2rem,5vw,3.4rem)] font-bold leading-[0.95]">
-              {result.title || 'Unknown title'}
-            </h2>
-            <p className="m-0 text-[1.1rem] font-medium text-accent-dark">{result.artist || 'Unknown artist'}</p>
-            <div className="mt-1 grid gap-3">
-              <div className="flex justify-between gap-4 border-t border-line pt-3">
-                <strong className="text-[0.92rem]">Checked clip</strong>
-                <span className="text-muted leading-relaxed">Around {formData.start_time}</span>
+                <label className="flex flex-col gap-2">
+                  <span className="text-[12px] font-bold text-[#1e293b] ml-1">Timestamp</span>
+                  <div className="relative flex items-center">
+                    <Clock className="absolute left-4 h-5 w-5 text-[#94a3b8]" />
+                    <input
+                      name="start_time"
+                      type="text"
+                      value={formData.start_time}
+                      onChange={handleChange}
+                      placeholder="0:10"
+                      required
+                      className="w-full rounded-full bg-[#303842] hover:bg-[#39424e] focus:bg-[#2a313a] border-2 border-transparent focus:border-[#4ade80]/50 outline-none pl-12 pr-4 py-[14px] text-sm text-[#f1f5f9] transition-all font-medium placeholder:text-[#64748b] shadow-inner"
+                    />
+                  </div>
+                </label>
               </div>
-              <div className="flex justify-between gap-4 border-t border-line pt-3">
-                <strong className="text-[0.92rem]">Source</strong>
-                <span className="text-muted leading-relaxed">YouTube or Shorts link</span>
+
+              {/* Positioned Button slightly overlapping or just below inner content */}
+              <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 z-20">
+                <button
+                  type="submit"
+                  disabled={status === 'loading'}
+                  className="rounded-full bg-[linear-gradient(to_bottom,#1a8362,#0e4835)] active:scale-[0.98] text-[#f1f5f9] font-semibold flex items-center justify-center px-[4.5rem] py-[13px] text-[15px] transition-all border shadow-[inset_0_2px_4px_rgba(255,255,255,0.25),0_8px_20px_rgba(10,50,40,0.6)] border-[#34d399]/40 disabled:opacity-70 disabled:cursor-wait"
+                >
+                  {status === 'loading' ? 'Identifying...' : 'Identify Music'}
+                </button>
               </div>
-            </div>
-          </div>
-        ) : null}
+            </form>
+          </section>
 
-        {status === 'loading' ? (
-          <div className="grid gap-3">
-            <p className="m-0 text-xs uppercase tracking-[0.16em] text-accent-dark">Loading</p>
-            <h2 className="m-0 text-3xl font-bold leading-tight">Listening to your selected clip...</h2>
-            <p className="text-muted leading-relaxed">Downloading the chosen timeframe and sending it for recognition.</p>
-          </div>
-        ) : null}
+          {/* Spacer for button overlap */}
+          <div className="h-2"></div>
 
-        {status === 'error' ? (
-          <div className="grid gap-3">
-            <p className="m-0 text-xs uppercase tracking-[0.16em] text-error">Error</p>
-            <h2 className="m-0 text-3xl font-bold leading-tight">No match returned</h2>
-            <p className="text-muted leading-relaxed">{error || 'Something went wrong while identifying the song.'}</p>
-          </div>
-        ) : null}
+          {/* Result States Card */}
+          <section className="w-full rounded-[24px] bg-[linear-gradient(135deg,rgba(200,210,220,0.85),rgba(220,230,240,0.7))] backdrop-blur-2xl px-8 py-6 pb-8 shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-white/40 flex-1 min-h-[160px] flex flex-col justify-center transition-all duration-300 relative text-[#0f172a] mb-15" aria-live="polite">
+            
+            {status === 'idle' && (
+              <div className="flex flex-col w-full h-full animate-in fade-in zoom-in-95 duration-400 justify-center items-center">
+                <p className="absolute top-5 left-6 text-[11px] font-bold uppercase tracking-[0.15em] text-[#334155]">Ready</p>
+                <div className="flex flex-col items-center justify-center mt-3">
+                  <div className="text-[#64748b] mb-3">
+                    <Music className="h-8 w-8" strokeWidth={1.5} />
+                  </div>
+                  <h3 className="font-bold text-[#0f172a] text-[15px] mb-1">Results will appear here.</h3>
+                  <p className="text-[13px] text-[#475569] leading-relaxed max-w-[300px] text-center">
+                    Pick a timestamp with audible music, like <span className="font-semibold text-[#1e293b]">0:10</span>.
+                  </p>
+                </div>
+              </div>
+            )}
 
-        {status === 'idle' ? (
-          <div className="grid gap-3">
-            <p className="m-0 text-xs uppercase tracking-[0.16em] text-muted">Ready</p>
-            <h2 className="m-0 text-3xl font-bold leading-tight">Results will appear here.</h2>
-            <p className="text-muted leading-relaxed">
-              Pick a timestamp with audible music, like <strong className="font-semibold text-ink">0:30</strong>.
-            </p>
-          </div>
-        ) : null}
-      </section>
-    </main>
+            {status === 'loading' && (
+              <div className="flex flex-col w-full h-full animate-in fade-in zoom-in-95 duration-400 justify-center items-center">
+                <p className="absolute top-5 left-6 text-[11px] font-bold uppercase tracking-[0.15em] text-[#334155]">Loading</p>
+                
+                <div className="w-full max-w-[500px] rounded-[20px] bg-[linear-gradient(90deg,rgba(255,255,255,0.4),rgba(255,255,255,0.1))] border border-white/30 backdrop-blur-md px-6 py-6 shadow-[0_0_40px_rgba(40,200,160,0.25)] flex flex-col items-center justify-center relative mt-4">
+                  <h3 className="font-bold text-[#0f172a] text-[15px] mb-4">Listening to your selected clip...</h3>
+                  <div className="flex h-8 w-full justify-center items-center gap-1.5 mb-2">
+                    {Array.from({ length: 9 }).map((_, i) => (
+                      <div
+                        key={i}
+                        className="w-[4px] bg-[#1a8362] rounded-full animate-waveform"
+                        style={{
+                          height: '20%',
+                          animationDelay: `${i * 0.15}s`,
+                          animationDuration: '1.2s'
+                        }}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {status === 'success' && result && (
+              <div className="flex flex-col w-full h-full animate-in fade-in zoom-in-95 duration-400">
+                <p className="absolute top-5 left-6 text-[11px] font-bold uppercase tracking-[0.15em] text-[#334155]">Match Found</p>
+                
+                {/* Inner Glowing Plate Container */}
+                <div className="w-full flex flex-col sm:flex-row items-center sm:items-stretch sm:justify-between gap-6 mt-6 rounded-[22px] bg-[linear-gradient(90deg,rgba(255,255,255,0.5),rgba(255,255,255,0.2))] border border-white/40 backdrop-blur-md px-6 py-5 shadow-[0_0_50px_rgba(50,220,180,0.2)] relative z-10">
+                  
+                  <div className="flex items-center gap-5 flex-1">
+                    {/* Metallic Avatars */}
+                    <div className="flex gap-3 items-center">
+                      <div className="h-[56px] w-[56px] rounded-full bg-[#1e242d] border-[3px] border-[#8a96a5] shadow-[inset_0_2px_4px_rgba(0,0,0,0.6),0_4px_10px_rgba(0,0,0,0.2)] shrink-0 flex items-center justify-center text-[18px] font-bold text-[#94a3b8]">
+                        {result.artist ? result.artist.substring(0, 2).toUpperCase() : 'JO'}
+                      </div>
+                      <div className="h-[52px] w-[52px] rounded-xl bg-[linear-gradient(135deg,#d1d5db,#94a3b8)] border border-[#cbd5e1] shadow-inner shrink-0 hidden sm:block"></div>
+                    </div>
+
+                    <div className="flex flex-col justify-center">
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-[13px] font-semibold text-[#334155]">{result.artist || 'Joe Layne'}</span>
+                      </div>
+                      <div className="text-[19px] font-bold text-[#0f172a] leading-tight">
+                        {result.title || 'Portrait'}
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex flex-col justify-center gap-3 sm:border-l border-[#94a3b8]/30 sm:pl-6 sm:min-w-[180px]">
+                    <div className="flex justify-between sm:flex-col sm:justify-center items-center sm:items-start gap-0.5 w-full text-[12px]">
+                      <div className="flex items-center gap-1.5 text-[#475569]">
+                        <Clock className="h-3.5 w-3.5" /> 
+                        <span className="font-medium">Checked clip</span>
+                      </div>
+                      <span className="font-bold text-[#0f172a] sm:pl-5">Around {formData.start_time || '0:10'}</span>
+                    </div>
+                    <div className="flex justify-between sm:flex-col sm:justify-center items-center sm:items-start gap-0.5 w-full text-[12px]">
+                      <div className="flex items-center gap-1.5 text-[#475569]">
+                        <LinkIcon className="h-3.5 w-3.5" /> 
+                        <span className="font-medium">Source</span>
+                      </div>
+                      <span className="font-bold text-[#0f172a] sm:pl-5 truncate max-w-[120px]">YouTube video link</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {status === 'error' && (
+              <div className="flex flex-col w-full h-full animate-in fade-in zoom-in-95 duration-400 justify-center items-center">
+                <p className="absolute top-5 left-6 text-[11px] font-bold uppercase tracking-[0.15em] text-red-600">Error</p>
+                <div className="flex flex-col items-center justify-center mt-3">
+                  <div className="text-red-500 mb-3">
+                    <AlertCircle className="h-8 w-8" strokeWidth={1.5} />
+                  </div>
+                  <h3 className="font-bold text-[#0f172a] text-[15px] mb-1">No match returned</h3>
+                  <p className="text-[13px] text-[#475569] leading-relaxed max-w-[300px] text-center">
+                    {error || 'Something went wrong while identifying the song.'}
+                  </p>
+                </div>
+              </div>
+            )}
+            
+          </section>
+
+        </div>
+      </main>
+    </div>
   )
 }
 
