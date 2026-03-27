@@ -5,7 +5,6 @@ import yt_dlp
 
 
 def download_audio(url, timestamp):
-    os.makedirs('temp', exist_ok=True)
     clip_id = uuid.uuid4().hex
     output_path = os.path.join('temp', f'audio-{clip_id}.%(ext)s')
     start = max(timestamp - 3, 0)

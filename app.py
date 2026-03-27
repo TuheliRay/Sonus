@@ -1,43 +1,26 @@
 from flask import Flask, jsonify, request
 from downloader import download_audio
 from recognizer import recognize_audio
+from parser import _parse_time_to_seconds
 import os
+import uuid
 
 app = Flask(__name__)
 
+TEMP_DIR = "temp"
+if not os.path.exists(TEMP_DIR):
+    os.makedirs(TEMP_DIR)
 
-def _parse_time_to_seconds(value):
-    if isinstance(value, (int, float)):
-        return max(int(value), 0)
 
-    text = str(value or "").strip()
-    if not text:
-        raise ValueError("Time value is required.")
-
-    parts = text.split(":")
-
-    # Validate input
-    if not all(part.isdigit() for part in parts):
-        raise ValueError("Use seconds or mm:ss / hh:mm:ss format.")
-
-    parts = list(map(int, parts))
-
-    if len(parts) == 1:
-        # "90"
-        return parts[0]
-
-    elif len(parts) == 2:
-        # "mm:ss"
-        minutes, seconds = parts
-        return minutes * 60 + seconds
-
-    elif len(parts) == 3:
-        # "hh:mm:ss"
-        hours, minutes, seconds = parts
-        return hours * 3600 + minutes * 60 + seconds
-
-    else:
-        raise ValueError("Invalid time format")
+def process_audio_file(file_path):
+    try:
+        result = recognize_audio(file_path)
+        return result
+    except Exception as exc:
+        return {"error": f"Failed to process audio file: {exc}"}, 500
+    finally:
+        if os.path.exists(file_path):
+            os.remove(file_path)
 
 
 @app.route("/identify", methods=["POST"])
@@ -58,14 +41,29 @@ def identify_song():
     except Exception as exc:
         return jsonify({"error": f"Failed to download audio clip: {exc}"}), 500
 
-    try:
-        result = recognize_audio(audio_file)
-    finally:
-        if os.path.exists(audio_file):
-            os.remove(audio_file)
-
+    result = process_audio_file(audio_file)
     return jsonify(result)
 
 
+@app.route("/identify-upload", methods=["POST"])
+def identify_uploaded_audio():
+    if "audio" not in request.files:
+        return jsonify({"error":"No audio file uploaded"}) , 400
+
+    audio_file = request.files["audio"]
+
+    # Process the uploaded audio file here
+    if audio_file.filename == "":
+        return jsonify({"error" : "No selected file"}) , 400
+    
+    clip_id = uuid.uuid4().hex
+    filename = audio_file.filename
+    ext = os.path.splitext(filename)[1]
+    temp_path = os.path.join("temp" , f"audio-{clip_id}{ext}")
+    audio_file.save(temp_path)
+
+    result = process_audio_file(temp_path)
+    return jsonify(result)
+    
 if __name__ == "__main__":
     app.run(debug=True)
