@@ -2,10 +2,12 @@ from flask import Flask, jsonify, request
 from downloader import download_audio
 from recognizer import recognize_audio
 from parser import _parse_time_to_seconds
+from flask_cors import CORS
 import os
 import uuid
 
 app = Flask(__name__)
+CORS(app)
 
 TEMP_DIR = "temp"
 if not os.path.exists(TEMP_DIR):
