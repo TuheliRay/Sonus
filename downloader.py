@@ -16,11 +16,6 @@ def download_audio(url, timestamp):
             'end_time': end
         }],
         'no_js_runtimes': True,
-        'js_runtimes': {
-            'node': {
-                'path': r'C:\Program Files\nodejs\node.exe'
-            }
-        },
         'outtmpl': output_path,
         'quiet': True,
         'noplaylist': True,
