@@ -1,4 +1,9 @@
 import { useState, useRef } from "react";
+
+const API_URL = import.meta.env.DEV
+  ? "http://localhost:5000"
+  : "https://sonus-pnku.onrender.com";
+
 export default function UploadSection({ onAddPulse }) {
   const [file, setFile] = useState(null);
   const [progress, setProgress] = useState(0);
@@ -39,7 +44,7 @@ export default function UploadSection({ onAddPulse }) {
     formData.append("audio", selectedFile);
 
     try {
-      const response = await fetch("http://localhost:5000/identify-upload", {
+      const response = await fetch(`${API_URL}/identify-upload`, {
         method: "POST",
         body: formData
       });

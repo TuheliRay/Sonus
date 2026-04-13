@@ -1,4 +1,9 @@
 import { useState } from "react";
+
+const API_URL = import.meta.env.DEV
+  ? "http://localhost:5000"
+  : "https://sonus-pnku.onrender.com";
+
 export default function StreamInput({ onAddPulse }) {
   const [url, setUrl] = useState("");
   const [timestamp, setTimestamp] = useState("");
@@ -12,7 +17,7 @@ export default function StreamInput({ onAddPulse }) {
     setError(null);
     try {
       //response - entire HTTP object returned by server
-      const response = await fetch("http://localhost:5000/identify", {
+      const response = await fetch(`${API_URL}/identify`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ url, start_time: timestamp })
