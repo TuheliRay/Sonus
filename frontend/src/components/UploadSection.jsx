@@ -94,7 +94,7 @@ export default function UploadSection({ onAddPulse }) {
         </h2>
 
         <p className="text-sm text-gray-400 mb-4">
-          {file ? "File Uploaded" : "Upload MP3, WAV, AAC"}
+          {file ? "File Uploaded" : "Upload MP3, WAV, AAC , M4A"}
         </p>
 
         <label className="px-5 py-2 border border-[#cc97ff] text-[#cc97ff] rounded-lg cursor-pointer inline-block" htmlFor="upload-audio">
