@@ -42,7 +42,7 @@ export default function UploadSection({ onAddPulse }) {
     //most backends expect file uploads as formd data
     const formData = new FormData();
     formData.append("audio", selectedFile);
-
+    const e2eStart = performance.now();
     try {
       const response = await fetch(`${API_URL}/identify-upload`, {
         method: "POST",
@@ -50,6 +50,8 @@ export default function UploadSection({ onAddPulse }) {
       });
 
       const data = await response.json();
+      const e2eLatency = performance.now() - e2eStart;
+      console.log(`e2e_latency_ms: ${e2eLatency.toFixed(2)}`);  
       clearInterval(progressInterval.current);
 
       if (response.ok) {
