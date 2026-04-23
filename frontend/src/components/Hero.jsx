@@ -6,9 +6,9 @@ export default function Hero() {
       </h1>
 
       <p className="text-sm sm:text-base text-[#a3aac4] max-w-xl mt-3">
-        Unlock the sonic DNA of any soundscape. Paste a link or upload a
+        Unlock the sonic DNA of any soundscape. Upload an audio
         fragment to reveal the frequency behind the rhythm.
       </p>
     </header>
   );
-}
+}

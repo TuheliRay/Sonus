@@ -1,8 +1,7 @@
 from flask import Flask, jsonify, request
-from downloader import download_audio
 from recognizer import recognize_audio
-from parser import _parse_time_to_seconds
 from flask_cors import CORS
+import time
 import os
 import uuid
 
@@ -25,28 +24,6 @@ def process_audio_file(file_path):
             os.remove(file_path)
 
 
-@app.route("/identify", methods=["POST"])
-def identify_song():
-    data = request.get_json(silent=True) or {}
-    url = (data.get("url") or "").strip()
-
-    if not url:
-        return jsonify({"error": "A YouTube video or Shorts link is required."}), 400
-
-    try:
-        timestamp = _parse_time_to_seconds(data.get("start_time"))
-    except ValueError as exc:
-        return jsonify({"error": str(exc)}), 400
-
-    try:
-        audio_file = download_audio(url, timestamp)
-    except Exception as exc:
-        return jsonify({"error": f"Failed to download audio clip: {exc}"}), 500
-
-    result = process_audio_file(audio_file)
-    return jsonify(result)
-
-
 @app.route("/identify-upload", methods=["POST"])
 def identify_uploaded_audio():
     if "audio" not in request.files:
@@ -63,8 +40,9 @@ def identify_uploaded_audio():
     ext = os.path.splitext(filename)[1]
     temp_path = os.path.join("temp" , f"audio-{clip_id}{ext}")
     audio_file.save(temp_path)
-
+    start_time = time.time()
     result = process_audio_file(temp_path)
+    print(f"Identified song in {time.time() - start_time} seconds")
     return jsonify(result)
     
 if __name__ == "__main__":

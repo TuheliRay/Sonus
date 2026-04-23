@@ -1,10 +1,10 @@
 import { useState } from "react";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
-import StreamInput from "./components/StreamInput";
 import UploadSection from "./components/UploadSection";
 import Footer from "./components/Footer";
 import RecentPulses from "./components/RecentPulses";
+
 
 export default function App() {
   const [pulses, setPulses] = useState([]);
@@ -25,14 +25,29 @@ export default function App() {
       <main className="pt-20 pb-12 px-4 sm:px-6 max-w-7xl mx-auto">
         <Hero />
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-          <div className="lg:col-span-7 flex flex-col gap-6">
-            <StreamInput onAddPulse={addPulse} />
-            <RecentPulses pulses={pulses} />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
+          {/* Left Column: Identify Track */}
+          <div className="flex flex-col">
+            <h2 className="text-3xl font-bold mb-2">Identify Track</h2>
+            <p className="text-[#a3aac4] text-sm mb-6">
+              Capture the essence. Upload an audio fragment to
+              analyze the sonic pulse.
+            </p>
+            <UploadSection onAddPulse={addPulse} />
           </div>
 
-          <div className="lg:col-span-5">
-            <UploadSection onAddPulse={addPulse} />
+          {/* Right Column: Recent Pulses */}
+          <div className="flex flex-col">
+            <h2 className="text-3xl font-bold mb-2">Recent Pulses</h2>
+            <p className="text-[#a3aac4] text-xs font-semibold uppercase tracking-wider mb-6">
+              Your identification history
+            </p>
+            <RecentPulses pulses={pulses} />
+            <div className="mt-8 text-center lg:text-right">
+              <span className="text-xs font-bold text-[#cc97ff] uppercase tracking-wider">
+                {pulses.length} {pulses.length === 1 ? "song" : "songs"} detected
+              </span>
+            </div>
           </div>
         </div>
       </main>

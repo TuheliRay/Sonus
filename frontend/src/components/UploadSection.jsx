@@ -76,7 +76,7 @@ export default function UploadSection({ onAddPulse }) {
     }
   }
   return (
-    <div className="bg-[#0f1930] rounded-xl p-2 min-h-[350px] lg:min-h-[488px] flex flex-col h-full">
+    <div className="bg-[#0f1930] rounded-xl p-2 min-h-[300px] lg:min-h-[360px] flex flex-col h-full">
 
       <div className="flex-1 border-2 border-dashed border-gray-600 rounded-lg flex flex-col items-center justify-center p-6 text-center">
         <input
@@ -90,15 +90,15 @@ export default function UploadSection({ onAddPulse }) {
         <div className="text-4xl mb-4">☁️</div>
 
         <h2 className="text-xl font-bold mb-2">
-          {file ? file.name : "Drag & Drop Audio"}
+          {file ? file.name : "Drop your audio"}
         </h2>
 
-        <p className="text-sm text-gray-400 mb-4">
-          {file ? "File Uploaded" : "Upload MP3, WAV, AAC , M4A"}
+        <p className="text-[10px] sm:text-xs font-semibold tracking-wider text-gray-400 uppercase mb-6">
+          {file ? "File Uploaded" : "WAV, MP3, OR FLAC UP TO 20MB"}
         </p>
 
-        <label className="px-5 py-2 border border-[#cc97ff] text-[#cc97ff] rounded-lg cursor-pointer inline-block" htmlFor="upload-audio">
-          {isProcessing ? "Processing..." : "Select File"}
+        <label className="px-6 py-2 bg-[#d1a3ff] hover:bg-[#bd7cfc] text-black font-bold uppercase tracking-wide rounded-md cursor-pointer inline-block transition-colors" htmlFor="upload-audio">
+          {isProcessing ? "PROCESSING..." : "SELECT FILE"}
         </label>
       </div>
 
