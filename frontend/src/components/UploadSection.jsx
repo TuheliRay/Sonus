@@ -58,6 +58,8 @@ export default function UploadSection({ onAddPulse }) {
           setIsProcessing(false);
           if (!data.error) {
             setScanResult("success");
+            console.log(`⏱️ ACRCloud API Match Time: ${data.acrcloud_time}s`);
+            console.log(`⏱️ Total Backend Processing Time: ${data.total_backend_time.toFixed(2)}s`);
             if (onAddPulse) onAddPulse(data);
           } else {
             setScanResult("not_recognized");

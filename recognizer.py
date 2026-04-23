@@ -33,4 +33,5 @@ def recognize_audio(audio_file):
     return {
         "title": music.get("title", "Unknown title"),
         "artist": artists[0].get("name", "Unknown artist") if artists else "Unknown artist",
+        "acrcloud_time": result_json.get("cost_time", 0)
     }

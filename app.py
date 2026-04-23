@@ -42,7 +42,11 @@ def identify_uploaded_audio():
     audio_file.save(temp_path)
     start_time = time.time()
     result = process_audio_file(temp_path)
-    print(f"Identified song in {time.time() - start_time} seconds")
+    total_time = time.time() - start_time
+    
+    if "error" not in result:
+        result["total_backend_time"] = total_time
+        
     return jsonify(result)
     
 if __name__ == "__main__":
