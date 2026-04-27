@@ -42,6 +42,7 @@ export default function UploadSection({ onAddPulse }) {
     //most backends expect file uploads as formd data
     const formData = new FormData();
     formData.append("audio", selectedFile);
+    console.log(`Payload size (before): ${(selectedFile.size / 1024).toFixed(1)} KB`);
     const e2eStart = performance.now();
     try {
       const response = await fetch(`${API_URL}/identify-upload`, {
@@ -60,8 +61,8 @@ export default function UploadSection({ onAddPulse }) {
           setIsProcessing(false);
           if (!data.error) {
             setScanResult("success");
-            console.log(`⏱️ ACRCloud API Match Time: ${data.acrcloud_time}s`);
-            console.log(`⏱️ Total Backend Processing Time: ${data.total_backend_time.toFixed(2)}s`);
+            console.log(`ACRCloud API Match Time: ${data.acrcloud_time}s`);
+            console.log(`Total Backend Processing Time: ${data.total_backend_time.toFixed(2)}s`);
             if (onAddPulse) onAddPulse(data);
           } else {
             setScanResult("not_recognized");
