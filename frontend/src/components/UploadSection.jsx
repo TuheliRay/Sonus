@@ -42,7 +42,6 @@ export default function UploadSection({ onAddPulse }) {
     //most backends expect file uploads as formd data
     const formData = new FormData();
     formData.append("audio", selectedFile);
-    console.log(`Payload size (before): ${(selectedFile.size / 1024).toFixed(1)} KB`);
     const e2eStart = performance.now();
     try {
       const response = await fetch(`${API_URL}/identify-upload`, {
@@ -52,7 +51,6 @@ export default function UploadSection({ onAddPulse }) {
 
       const data = await response.json();
       const e2eLatency = performance.now() - e2eStart;
-      console.log(`e2e_latency_ms: ${e2eLatency.toFixed(2)}`);  
       clearInterval(progressInterval.current);
 
       if (response.ok) {
@@ -61,8 +59,15 @@ export default function UploadSection({ onAddPulse }) {
           setIsProcessing(false);
           if (!data.error) {
             setScanResult("success");
-            console.log(`ACRCloud API Match Time: ${data.acrcloud_time}s`);
-            console.log(`Total Backend Processing Time: ${data.total_backend_time.toFixed(2)}s`);
+            const metrics = {
+              song: selectedFile.name,
+              original_size_kb: (selectedFile.size / 1024).toFixed(1),
+              e2e_latency_ms: e2eLatency.toFixed(0),
+              backend_time_ms: (data.total_backend_time * 1000).toFixed(0),
+              upload_time_ms: (e2eLatency - data.total_backend_time * 1000).toFixed(0),
+              acrcloud_time_ms: (data.acrcloud_time * 1000).toFixed(0),
+            };
+            console.table(metrics);
             if (onAddPulse) onAddPulse(data);
           } else {
             setScanResult("not_recognized");
