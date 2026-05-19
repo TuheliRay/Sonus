@@ -42,7 +42,7 @@ def identify_uploaded_audio():
     audio_file.save(temp_path)
     start_time = time.time()
     result = process_audio_file(temp_path)
-    total_time = time.time() - start_time
+    total_time = time.time() - start_time 
     
     if "error" not in result:
         result["total_backend_time"] = total_time

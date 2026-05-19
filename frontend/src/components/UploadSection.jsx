@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { trimAudioForACR } from "../utils/trimAudio";
 
 const API_URL = import.meta.env.DEV
   ? "http://localhost:5000"
@@ -37,11 +38,20 @@ export default function UploadSection({ onAddPulse }) {
     setFile(selectedFile);
     startSimulatedProgress();
 
+    // Trim audio client-side before uploading (8kHz mono WAV, max 10s)
+    let audioBlob;
+    try {
+      audioBlob = await trimAudioForACR(selectedFile);
+    } catch (trimErr) {
+      console.warn("Trim failed, falling back to original file:", trimErr);
+      audioBlob = selectedFile;
+    }
+
     //formdata = send data to a server in the same format as html form
     //used because normal JSON cannot send audio files
     //most backends expect file uploads as formd data
     const formData = new FormData();
-    formData.append("audio", selectedFile);
+    formData.append("audio", audioBlob, "trimmed.wav");
     const e2eStart = performance.now();
     try {
       const response = await fetch(`${API_URL}/identify-upload`, {
@@ -62,6 +72,8 @@ export default function UploadSection({ onAddPulse }) {
             const metrics = {
               song: selectedFile.name,
               original_size_kb: (selectedFile.size / 1024).toFixed(1),
+              trimmed_size_kb: (audioBlob.size / 1024).toFixed(1),
+              size_reduction_pct: (((selectedFile.size - audioBlob.size) / selectedFile.size) * 100).toFixed(1) + "%",
               e2e_latency_ms: e2eLatency.toFixed(0),
               backend_time_ms: (data.total_backend_time * 1000).toFixed(0),
               upload_time_ms: (e2eLatency - data.total_backend_time * 1000).toFixed(0),
