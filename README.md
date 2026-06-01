@@ -11,12 +11,11 @@ Sonus is a modern, full-stack web application that enables users to upload audio
 
 ## Features
 
-- 🎵 **Audio Upload & Recognition** - Upload any audio file and instantly identify the song
-- 🎯 **Accurate Identification** - Powered by ACRCloud's music recognition API
-- ⚡ **Real-time Performance Metrics** - Track backend processing time and API response time
-- 🎨 **Modern UI** - Built with React, Tailwind CSS, and Lucide React icons
-- 🚀 **Production Ready** - Containerized with Docker for easy deployment
-- 🔄 **CORS Enabled** - Seamless frontend-backend communication
+- **Audio Upload & Recognition** - Upload any audio file and instantly identify the song
+- **Accurate Identification** - Powered by ACRCloud's music recognition API
+- **Modern UI** - Built with React, Tailwind CSS, and Lucide React icons
+- **Production Ready** - Containerized with Docker for easy deployment
+- **CORS Enabled** - Seamless frontend-backend communication
 
 ## Tech Stack
 
